@@ -14,13 +14,31 @@ const connection = mysql.createConnection({
     port: conf.port,
     database:  conf.database
 })
+
 app.use(express.json());
 app.use(cors());
 
 app.get('/genre', async (req, res)=> {
-    res.send('server response success');
     connection.query(
-        "select * from concert",
+        "select * from concert_table order by rank_location asc",
+        (err, rows, fields)=> {
+            res.send(rows)
+            console.log(fields);
+        }
+    )
+})
+app.get('/region', async (req, res)=> {
+    connection.query(
+        "select * from concert_table",
+        (err, rows, fields)=> {
+            res.send(rows)
+            console.log(fields);
+        }
+    )
+})
+app.get('/period', async (req, res)=> {
+    connection.query(
+        "select * from concert_table",
         (err, rows, fields)=> {
             res.send(rows)
             console.log(fields);
