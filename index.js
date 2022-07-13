@@ -45,6 +45,16 @@ app.get('/period', async (req, res)=> {
         }
     )
 })
+app.get('/detailview/:id', async (req,res)=>{
+    const params = req.params;
+    const { id } = params;
+    connection.query(
+        `select * from customers_table where id=${id}`,
+        (err, rows, fields)=>{
+            res.send(rows[0]);
+        }
+    )
+})
 
 // 서버실행
 app.listen(port, () => {
