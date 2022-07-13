@@ -67,6 +67,21 @@ app.get('/genre/:genre', async (req, res)=> {
         }
     )
 })
+app.put('/editConcert/:id', async (req,res)=>{
+    // 파라미터 값을 가지고 있는 객체
+    const params = req.params;
+    const { id } = params;
+    const body = req.body;
+    const { c_title, c_singer, c_genre, c_location, c_price, c_date } = body;
+    connection.query(
+        `update concert_table
+        set title='${c_title}', singer='${c_singer}', genre='${c_genre}', location='${c_location}', price='${c_price}', date='${c_date}'
+        where id = ${id}`,
+        (err, rows, fields)=>{
+            res.send(rows);
+        }
+    )
+})
 
 // 서버실행
 app.listen(port, () => {
