@@ -27,6 +27,7 @@ app.get('/genre', async (req, res)=> {
         }
     )
 })
+
 app.get('/region', async (req, res)=> {
     connection.query(
         "select * from concert_table",
@@ -39,6 +40,27 @@ app.get('/region', async (req, res)=> {
 app.get('/period', async (req, res)=> {
     connection.query(
         "select * from concert_table",
+        (err, rows, fields)=> {
+            res.send(rows)
+            console.log(fields);
+        }
+    )
+})
+app.get('/detailview/:id', async (req,res)=>{
+    const params = req.params;
+    const { id } = params;
+    connection.query(
+        `select * from concert_table where id=${id}`,
+        (err, rows, fields)=>{
+            res.send(rows[0]);
+        }
+    )
+})
+app.get('/genre/:genre', async (req, res)=> {
+    const params = req.params;
+    const { genre } = params;
+    connection.query(
+        `select * from concert_table where genre=${genre}`,
         (err, rows, fields)=> {
             res.send(rows)
             console.log(fields);
