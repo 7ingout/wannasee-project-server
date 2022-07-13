@@ -18,6 +18,7 @@ const connection = mysql.createConnection({
 app.use(express.json());
 app.use(cors());
 
+// 장르별 페이지
 app.get('/genre', async (req, res)=> {
     connection.query(
         "select * from concert_table order by rank_location asc",
@@ -27,6 +28,19 @@ app.get('/genre', async (req, res)=> {
         }
     )
 })
+
+app.get('/genre/:genre', async (req, res)=> {
+    const params = req.params;
+    connection.query(
+    `select * from customers_table where genre=${params.genre}`,
+        (err, rows, fields)=> {
+            res.send(rows[0])
+        }
+    )
+})
+
+
+// 지역별 페이지
 app.get('/region', async (req, res)=> {
     connection.query(
         "select * from concert_table",
@@ -36,6 +50,9 @@ app.get('/region', async (req, res)=> {
         }
     )
 })
+
+
+// 기간별 페이지
 app.get('/period', async (req, res)=> {
     connection.query(
         "select * from concert_table",
