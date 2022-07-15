@@ -60,7 +60,7 @@ app.get('/genre/:genre', async (req, res)=> {
     const params = req.params;
     const { genre } = params;
     connection.query(
-        `select * from concert_table where genre=${genre}`,
+        `select * from concert_table where genre='${genre}'`,
         (err, rows, fields)=> {
             res.send(rows)
             console.log(fields);
