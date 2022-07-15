@@ -85,12 +85,12 @@ app.put('/editConcert/:id', async (req,res)=>{
 })
 app.post('/addConcert', async (req,res)=>{
     const body = req.body;
-    const { c_title, c_singer, c_genre, c_location, c_price, c_start_time, c_end_time, c_desc } = body;
+    const { c_title, c_singer, c_genre, c_location, c_price, c_desc, c_start_time, c_end_time} = body;
     if(!c_title) {
         res.send("모든 필드를 입력해주세요");
     }
     connection.query(
-        "insert into concert_table(title, singer, genre, location, price, start_time, end_time, desc) values(?,?,?,?,?,?)",
+        "insert into concert_table(title, singer, genre, location, price, start_time, end_time, description) values(?,?,?,?,?,?,?,?)",
         [c_title, c_singer, c_genre, c_location, c_price, c_start_time, c_end_time, c_desc],
         (err, rows, fields)=>{
             res.send(rows);
