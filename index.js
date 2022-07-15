@@ -72,12 +72,23 @@ app.get('/period', async (req, res)=> {
     )
 })
 // 기간별
+app.get('/period/:weekend', async (req, res)=> {
+    const params = req.params;
+    const { weekend } = params;
+    connection.query(
+        `select * from concert_table where weekend=${weekend}`,
+        (err, rows, fields)=> {
+            res.send(rows)
+            console.log(fields);
+        }
+    )
+})
 
 app.get('/detailview/:id', async (req,res)=>{
     const params = req.params;
     const { id } = params;
     connection.query(
-        `select * from concert_table where id=${id}`,
+        `select title, singer, genre, location, price, DATE_FORMAT(concertdate, "%Y/%m/%d") as concertdate, imgsrc, rank_location, description, start_time, end_time from concert_table where id=${id}`,
         (err, rows, fields)=>{
             res.send(rows[0]);
         }
@@ -90,10 +101,10 @@ app.put('/editConcert/:id', async (req,res)=>{
     const params = req.params;
     const { id } = params;
     const body = req.body;
-    const { c_title, c_singer, c_genre, c_location, c_price, c_date, c_start_time, c_end_time, c_description } = body;
+    const { c_title, c_singer, c_genre, c_location, c_price, c_concertdate, c_start_time, c_end_time, c_description } = body;
     connection.query(
         `update concert_table
-        set title='${c_title}', singer='${c_singer}', genre='${c_genre}', location='${c_location}', price='${c_price}', date='${c_date}'
+        set title='${c_title}', singer='${c_singer}', genre='${c_genre}', location='${c_location}', price='${c_price}', concertdate='${c_concertdate}'
         , start_time='${c_start_time}', end_time='${c_end_time}', description='${c_description}'
         where id = ${id}`,
         (err, rows, fields)=>{
