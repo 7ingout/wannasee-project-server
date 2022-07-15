@@ -71,13 +71,26 @@ app.get('/period', async (req, res)=> {
         }
     )
 })
-// 기간별
+// 기간별 주말
+app.get('/period/:weekend', async (req, res)=> {
+    const params = req.params;
+    const { weekend } = params;
+    connection.query(
+        `select * from concert_table where weekend=${weekend}`,
+        (err, rows, fields)=> {
+            res.send(rows)
+            console.log(fields);
+        }
+    )
+})
+// 기간별 월별
 
+// 콘서트 상세보기
 app.get('/detailview/:id', async (req,res)=>{
     const params = req.params;
     const { id } = params;
     connection.query(
-        `select * from concert_table where id=${id}`,
+        `select imgsrc, DATE_FORMAT(concertdate, "%Y/%m/%d") as concertdate, title, singer, genre, location, price, start_time, end_time, description from concert_table where id=${id}`,
         (err, rows, fields)=>{
             res.send(rows[0]);
         }
@@ -105,13 +118,13 @@ app.put('/editConcert/:id', async (req,res)=>{
 // 콘서트 추가
 app.post('/addConcert', async (req,res)=>{
     const body = req.body;
-    const { c_title, c_singer, c_genre, c_location, c_price, c_start_time, c_end_time, c_description } = body;
+    const { c_imgsrc, c_concertdate, c_title, c_singer, c_genre, c_location, c_price, c_start_time, c_end_time, c_description } = body;
     if(!c_title) {
         res.send("모든 필드를 입력해주세요");
     }
     connection.query(
-        "insert into concert_table(title, singer, genre, location, price, start_time, end_time, description) values(?,?,?,?,?,?,?,?)",
-        [c_title, c_singer, c_genre, c_location, c_price, c_start_time, c_end_time, c_description],
+        "insert into concert_table(imgsrc, concertdate, title, singer, genre, location, price, start_time, end_time, description) values(?,?,?,?,?,?,?,?,?,?)",
+        [c_imgsrc, c_concertdate, c_title, c_singer, c_genre, c_location, c_price, c_start_time, c_end_time, c_description],
         (err, rows, fields)=>{
             res.send(err);
         }
