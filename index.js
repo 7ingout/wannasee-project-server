@@ -71,7 +71,19 @@ app.get('/period', async (req, res)=> {
         }
     )
 })
-// 기간별
+// 기간별 // 7_8월
+app.get('/period/:month', async (req, res)=> {
+    const params = req.params;
+    const { cmonth } = params;
+    connection.query(
+        `select * from concert_table where month(concertdate)=${cmonth}`,
+        (err, rows, fields)=> {
+            res.send(rows)
+            console.log(fields);
+        }
+    )
+})
+// 기간별 // 주말
 app.get('/period/:weekend', async (req, res)=> {
     const params = req.params;
     const { weekend } = params;
@@ -84,11 +96,12 @@ app.get('/period/:weekend', async (req, res)=> {
     )
 })
 
+
 app.get('/detailview/:id', async (req,res)=>{
     const params = req.params;
     const { id } = params;
     connection.query(
-        `select title, singer, genre, location, price, DATE_FORMAT(concertdate, "%Y/%m/%d") as concertdate, imgsrc, rank_location, description, start_time, end_time, concert_place from concert_table where id=${id}`,
+        `select title, singer, genre, location, price, DATE_FORMAT(concertdate, "%Y-%m-%d") as concertdate, imgsrc, rank_location, description, start_time, end_time, concert_place from concert_table where id=${id}`,
         (err, rows, fields)=>{
             res.send(rows[0]);
         }
@@ -116,13 +129,13 @@ app.put('/editConcert/:id', async (req,res)=>{
 // 콘서트 추가
 app.post('/addConcert', async (req,res)=>{
     const body = req.body;
-    const { c_title, c_singer, c_genre, c_location, c_price, c_start_time, c_end_time, c_description, c_concert_place } = body;
+    const { c_title, c_singer, c_genre, c_location, c_concertdate, c_price, c_start_time, c_end_time, c_description, c_concert_place } = body;
     if(!c_title) {
         res.send("모든 필드를 입력해주세요");
     }
     connection.query(
-        "insert into concert_table(title, singer, genre, location, price, start_time, end_time, description, concert_place) values(?,?,?,?,?,?,?,?,?)",
-        [c_title, c_singer, c_genre, c_location, c_price, c_start_time, c_end_time, c_description, c_concert_place],
+        "insert into concert_table(title, singer, genre, location, concertdate, price, start_time, end_time, description, concert_place) values(?,?,?,?,?,?,?,?,?,?)",
+        [c_title, c_singer, c_genre, c_location, c_concertdate, c_price, c_start_time, c_end_time, c_description, c_concert_place],
         (err, rows, fields)=>{
             res.send(err);
         }
