@@ -14,7 +14,23 @@ const connection = mysql.createConnection({
     port: conf.port,
     database:  conf.database
 })
-
+// 이미지 업로드
+// 업로드 이미지를 관리하는 스토리지 서버를 연결 -> multer를 사용하겠다.
+const multer = require("multer");
+// 이미지 파일 요청이 오면 어디에 저장할건지 지정
+const upload = multer({ 
+    storage: multer.diskStorage({
+        destination: function(req, file, cb){
+            // 어디에 저장할거냐? upload/
+            cb(null, 'upload/')
+        },
+        filename: function(req, file, cb){
+            // 어떤 이름으로 저장할거야?
+            // file 객체의 오리지널 이름으로 저장하겠다.
+            cb(null, file.originalname)
+        }
+    })
+});
 app.use(express.json());
 app.use(cors());
 // 장르
@@ -90,7 +106,7 @@ app.get('/detailview/:id', async (req,res)=>{
     const params = req.params;
     const { id } = params;
     connection.query(
-        `select imgsrc, DATE_FORMAT(concertdate, "%Y/%m/%d") as concertdate, title, singer, genre, location, price, start_time, end_time, description from concert_table where id=${id}`,
+        `select title, singer, genre, location, price, DATE_FORMAT(concertdate, "%Y/%m/%d") as concertdate, imgsrc, rank_location, description, start_time, end_time, concert_place from concert_table where id=${id}`,
         (err, rows, fields)=>{
             res.send(rows[0]);
         }
@@ -103,11 +119,11 @@ app.put('/editConcert/:id', async (req,res)=>{
     const params = req.params;
     const { id } = params;
     const body = req.body;
-    const { c_title, c_singer, c_genre, c_location, c_price, c_date, c_start_time, c_end_time, c_description } = body;
+    const { c_title, c_singer, c_genre, c_location, c_price, c_concertdate, c_start_time, c_end_time, c_description, c_concert_place } = body;
     connection.query(
         `update concert_table
-        set title='${c_title}', singer='${c_singer}', genre='${c_genre}', location='${c_location}', price='${c_price}', date='${c_date}'
-        , start_time='${c_start_time}', end_time='${c_end_time}', description='${c_description}'
+        set title='${c_title}', singer='${c_singer}', genre='${c_genre}', location='${c_location}', price='${c_price}', concertdate='${c_concertdate}'
+        , start_time='${c_start_time}', end_time='${c_end_time}', description='${c_description}', concert_place='${c_concert_place}'
         where id = ${id}`,
         (err, rows, fields)=>{
             res.send(rows);
@@ -116,15 +132,18 @@ app.put('/editConcert/:id', async (req,res)=>{
 })
 
 // 콘서트 추가
-app.post('/addConcert', async (req,res)=>{
+app.post('/addConcert',upload.single('imgsrc'), async (req,res)=>{
     const body = req.body;
-    const { c_imgsrc, c_concertdate, c_title, c_singer, c_genre, c_location, c_price, c_start_time, c_end_time, c_description } = body;
+    const { c_title, c_singer, c_genre, c_location, c_price, c_start_time, c_end_time, c_description, c_concert_place } = body;
+    const file = req.file;
+    const { c_imgsrc } = file;
+    console.log(file);
     if(!c_title) {
         res.send("모든 필드를 입력해주세요");
     }
     connection.query(
-        "insert into concert_table(imgsrc, concertdate, title, singer, genre, location, price, start_time, end_time, description) values(?,?,?,?,?,?,?,?,?,?)",
-        [c_imgsrc, c_concertdate, c_title, c_singer, c_genre, c_location, c_price, c_start_time, c_end_time, c_description],
+        "insert into concert_table(imgsrc, title, singer, genre, location, price, start_time, end_time, description, concert_place) values(?,?,?,?,?,?,?,?,?)",
+        [c_imgsrc, c_title, c_singer, c_genre, c_location, c_price, c_start_time, c_end_time, c_description, c_concert_place],
         (err, rows, fields)=>{
             res.send(err);
         }
