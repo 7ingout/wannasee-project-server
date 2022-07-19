@@ -5,7 +5,7 @@ const port = 3001;
 const mysql = require("mysql");
 const fs = require("fs")
 const dbinfo = fs.readFileSync('./database.json');
-const conf = JSON.parse(dbinfo)
+const conf = JSON.parse(dbinfo);
 
 
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
@@ -39,6 +39,19 @@ const connection = mysql.createConnection({
 app.use(express.json());
 app.use(cors());
 
+// 회원가입
+app.post('/join', async (req,res)=>{
+    const body = req.body;
+    const { id, name, phone, email, add, detailadd, password } = body;
+    const query = "INSERT INTO users(userId, userName, phone, email, address, detailadd, password) values(?,?,?,?,?,?,?)";
+    connection.query(
+                    query, 
+                    [id, name, phone, email, add, detailadd, password], 
+                    (err, rows, fields) => {
+                        res.send(err);
+                    });
+
+})
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 // upload폴더에 있는 파일에 접근할 수 있도록 설정
 // app.use("/upload", express.static("upload"));
