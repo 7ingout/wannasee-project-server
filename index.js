@@ -55,11 +55,11 @@ app.use(
 // 회원가입
 app.post('/join', async (req,res)=>{
     const body = req.body;
-    const { id, name, phone, email, add, detailadd, password } = body;
-    const query = "INSERT INTO users(userId, userName, phone, email, address, detailadd, password) values(?,?,?,?,?,?,?)";
+    const { id, name, phone, email, add, adddetail, password } = body;
+    const query = "INSERT INTO users(userId, userName, phone, email, address, adddetail, password) values(?,?,?,?,?,?,?)";
     connection.query(
                     query, 
-                    [id, name, phone, email, add, detailadd, password], 
+                    [id, name, phone, email, add, adddetail, password], 
                     (err, rows, fields) => {
                         res.send(err);
                     });
@@ -96,6 +96,17 @@ app.post('/loginProcess', (req,res) => {
     }
     );
 });
+// 로그인 id 중복확인
+app.get('/idCh', async (req,res)=>{
+    connection.query(
+        "select userId from users",
+        (err, rows, fields)=> {
+            res.send(rows)
+        }
+    )
+})
+
+
 
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 // upload폴더에 있는 파일에 접근할 수 있도록 설정
