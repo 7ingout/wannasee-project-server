@@ -66,10 +66,6 @@ app.post('/join', async (req,res)=>{
 
 })
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 42741de7b64d378a9b7864d35aa0584dfb5d009c
 // 로그인 id 중복확인
 app.get('/idCh', async (req,res)=>{
     connection.query(
