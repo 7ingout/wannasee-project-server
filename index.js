@@ -6,8 +6,8 @@ const mysql = require("mysql");
 const fs = require("fs")
 const dbinfo = fs.readFileSync('./database.json');
 const conf = JSON.parse(dbinfo);
-const session = require('express-session');
-const cookieParser = require('cookie-parser');
+// const session = require('express-session');
+// const cookieParser = require('cookie-parser');
 
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 // 업로드 이미지를 관리하는 스토리지 서버를 연결 -> multer를 사용하겠다.
@@ -39,18 +39,18 @@ const connection = mysql.createConnection({
 
 app.use(express.json());
 app.use(cors());
-app.use(cookieParser());
-app.use(
-    session({
-    key: "userid",
-    secret: "passowrd12513",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        expires: 60 * 60 * 24,
-    },
-})
-);
+// app.use(cookieParser());
+// app.use(
+//     session({
+//     key: "userid",
+//     secret: "passowrd12513",
+//     resave: false,
+//     saveUninitialized: false,
+//     cookie: {
+//         expires: 60 * 60 * 24,
+//     },
+// })
+// );
 
 // 회원가입
 app.post('/join', async (req,res)=>{
@@ -66,7 +66,10 @@ app.post('/join', async (req,res)=>{
 
 })
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 42741de7b64d378a9b7864d35aa0584dfb5d009c
 // 로그인 id 중복확인
 app.get('/idCh', async (req,res)=>{
     connection.query(
@@ -261,6 +264,30 @@ app.delete('/delConcert/:id', async (req,res)=>{
         }
     )
 })
+
+// 로그인
+app.get('/getId/:id', async (req,res)=>{
+    const params = req.params;
+    const { id } = params;
+    connection.query(
+        `select userId from users where userId='${id}'`,
+        (err, rows, fields)=>{
+            res.send(rows);
+        }
+    )
+})
+app.get('/getPassword/:id', async (req,res)=>{
+    const params = req.params;
+    const { id } = params;
+    connection.query(
+        `select password from users where userId='${id}'`,
+        (err, rows, fields)=>{
+            res.send(rows);
+        }
+    )
+})
+
+
 
 // 서버실행
 app.listen(port, () => {
