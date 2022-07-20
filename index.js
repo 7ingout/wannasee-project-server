@@ -67,35 +67,6 @@ app.post('/join', async (req,res)=>{
 })
 
 
-// 로그인
-app.get('/loginMember',(req,res)=>{
-    if(req.session.user){
-        res.send({LoggedIn: true, user: req.session.user})
-        console.log(req.session.user);
-    }else{
-        res.send({LoggedIn: false})
-    }
-});
-app.post('/loginProcess', (req,res) => {
-    const user_id = req.body.SenduserID;
-    const user_pw = req.body.SenduserPwd;
-
-    connection.query(
-        "SELECT * FROM users WHERE userId = ? AND password = ?",
-        [user_id, user_pw],
-    (err, result) => {
-        if(err){
-            res.send({ err: err});
-        }
-        if(result.length > 0){
-            req.session.user = result;
-            res.send(result);
-        }else{
-            res.send({message: "No user found"});
-        }
-    }
-    );
-});
 // 로그인 id 중복확인
 app.get('/idCh', async (req,res)=>{
     connection.query(
