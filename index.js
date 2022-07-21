@@ -220,10 +220,10 @@ app.put('/editConcert/:id', async (req,res)=>{
     const params = req.params;
     const { id } = params;
     const body = req.body;
-    const { c_title, c_singer, c_genre, c_location, c_price, c_concertdate, c_start_time, c_end_time, c_description, c_concert_place } = body;
+    const { c_imgsrc, c_rank_location, c_title, c_singer, c_genre, c_location, c_price, c_concertdate, c_start_time, c_end_time, c_description, c_concert_place } = body;
     connection.query(
         `update concert_table
-        set title='${c_title}', singer='${c_singer}', genre='${c_genre}', location='${c_location}', price='${c_price}', concertdate='${c_concertdate}'
+        set imgsrc='${c_imgsrc}', rank_location='${c_rank_location}', title='${c_title}', singer='${c_singer}', genre='${c_genre}', location='${c_location}', price='${c_price}', concertdate='${c_concertdate}'
         , start_time='${c_start_time}', end_time='${c_end_time}', description='${c_description}', concert_place='${c_concert_place}'
         where id = ${id}`,
         (err, rows, fields)=>{
@@ -235,13 +235,13 @@ app.put('/editConcert/:id', async (req,res)=>{
 // 콘서트 추가
 app.post('/addConcert', async (req,res)=>{
     const body = req.body;
-    const {c_imgsrc, c_title, c_singer, c_genre, c_location, c_concertdate, c_price, c_start_time, c_end_time, c_description, c_concert_place } = body;
+    const {c_rank_location, c_imgsrc, c_title, c_singer, c_genre, c_location, c_concertdate, c_price, c_start_time, c_end_time, c_description, c_concert_place } = body;
     if(!c_title) {
         res.send("모든 필드를 입력해주세요");
     }
     connection.query(
-        "insert into concert_table( imgsrc, title, singer, genre, location, concertdate, price, start_time, end_time, description, concert_place) values(?,?,?,?,?,?,?,?,?,?,?)",
-        [c_imgsrc, c_title, c_singer, c_genre, c_location, c_concertdate, c_price, c_start_time, c_end_time, c_description, c_concert_place],
+        "insert into concert_table(rank_location, imgsrc, title, singer, genre, location, concertdate, price, start_time, end_time, description, concert_place) values(?,?,?,?,?,?,?,?,?,?,?,?)",
+        [c_rank_location, c_imgsrc, c_title, c_singer, c_genre, c_location, c_concertdate, c_price, c_start_time, c_end_time, c_description, c_concert_place],
         (err, rows, fields)=>{
             res.send(rows);
         }
