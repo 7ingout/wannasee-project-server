@@ -272,7 +272,7 @@ app.get('/getId/:id', async (req,res)=>{
         }
     )
 })
-app.get('/getPassword/:id', async (req,res)=>{
+app.get('/getPw/:id', async (req,res)=>{
     const params = req.params;
     const { id } = params;
     connection.query(
