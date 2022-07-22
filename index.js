@@ -288,7 +288,7 @@ app.get('/mypage/:idid', async (req,res)=>{
     const params = req.params;
     const { idid } = params;
     connection.query(
-        `select user_title, user_region, user_location, DATE_FORMAT(user_date, "%Y-%m-%d") as user_date, user_start, user_num from user_reserve where user_id='${idid}'`,
+        `select id, user_title, user_region, user_location, DATE_FORMAT(user_date, "%Y-%m-%d") as user_date, user_start, user_num from user_reserve where user_id='${idid}'`,
         (err, rows, fields)=>{
             res.send(rows);
         }
@@ -296,12 +296,25 @@ app.get('/mypage/:idid', async (req,res)=>{
 })
 
 // 예매내역에 추가
-app.put('/addReservation', async (req,res)=>{
+app.post('/addReservation', async (req,res)=>{
     const body = req.body;
     const {c_user_id, c_user_title, c_user_region, c_user_location, c_user_date, c_user_start, c_user_num} = body;
     connection.query(
         "insert into user_reserve( user_id, user_title, user_region, user_location, user_date, user_start, user_num) values(?,?,?,?,?,?,?)",
         [c_user_id, c_user_title, c_user_region, c_user_location, c_user_date, c_user_start, c_user_num],
+        (err, rows, fields)=>{
+            res.send(rows);
+        }
+    )
+})
+
+// 예매내역 삭제
+app.delete('/delReservation/:id', async (req,res)=>{
+    const params = req.params;
+    const { id } = params;
+    console.log("삭제");
+    connection.query(
+        `delete from user_reserve where id=${id}`,
         (err, rows, fields)=>{
             res.send(rows);
         }
