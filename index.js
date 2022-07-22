@@ -296,12 +296,12 @@ app.get('/mypage/:idid', async (req,res)=>{
 })
 
 // 예매내역에 추가
-app.post('/addReservation', async (req,res)=>{
+app.put('/addReservation', async (req,res)=>{
     const body = req.body;
-    const {c_user_title, c_user_region, c_user_location, c_user_date, c_user_start, c_user_num} = body;
+    const {c_user_id, c_user_title, c_user_region, c_user_location, c_user_date, c_user_start, c_user_num} = body;
     connection.query(
-        "insert into user_reserve( user_title, user_region, user_location, user_date, user_start, user_num) values(?,?,?,?,?,?)",
-        [c_user_title, c_user_region, c_user_location, c_user_date, c_user_start, c_user_num],
+        "insert into user_reserve( user_id, user_title, user_region, user_location, user_date, user_start, user_num) values(?,?,?,?,?,?,?)",
+        [c_user_id, c_user_title, c_user_region, c_user_location, c_user_date, c_user_start, c_user_num],
         (err, rows, fields)=>{
             res.send(rows);
         }
