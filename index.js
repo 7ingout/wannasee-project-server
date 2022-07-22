@@ -8,29 +8,6 @@ const fs = require("fs")
 const dbinfo = fs.readFileSync('./database.json');
 const conf = JSON.parse(dbinfo);
 
-// const session = require('express-session');
-// const cookieParser = require('cookie-parser');
-
-//ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
-// 업로드 이미지를 관리하는 스토리지 서버를 연결 -> multer를 사용하겠다.
-// const multer = require("multer");
-// // 이미지 파일 요청이 오면 어디에 저장할건지 지정
-// const upload = multer({ 
-//     storage: multer.diskStorage({
-//         destination: function(req, file, cb){
-//             // 어디에 저장할거냐? upload/
-//             cb(null, 'upload/')
-//         },
-//         filename: function(req, file, cb){
-//             // 어떤 이름으로 저장할거야?
-//             // file 객체의 오리지널 이름으로 저장하겠다.
-//             cb(null, file.originalname)
-//         }
-//     })
-// });
-
-//ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
-
 const connection = mysql.createConnection({
     host: conf.host,
     user: conf.user,
@@ -41,18 +18,6 @@ const connection = mysql.createConnection({
 
 app.use(express.json());
 app.use(cors());
-// app.use(cookieParser());
-// app.use(
-//     session({
-//     key: "userid",
-//     secret: "passowrd12513",
-//     resave: false,
-//     saveUninitialized: false,
-//     cookie: {
-//         expires: 60 * 60 * 24,
-//     },
-// })
-// );
 
 // 회원가입
 app.post('/join', async (req,res)=>{
@@ -77,29 +42,6 @@ app.get('/idCh', async (req,res)=>{
         }
     )
 })
-
-
-
-//ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
-// upload폴더에 있는 파일에 접근할 수 있도록 설정
-// app.use("/upload", express.static("upload"));
-// app.post('/image', upload.single('image'), (req,res)=>{
-//     const file = req.file;
-//     console.log(file);
-//     res.send({
-//         imageUrl: "https:localhost:3000/"+file.destination+file.filename
-//     })
-// })
-// app.use("/upload", express.static("upload"));
-// app.post('/image', upload.single('c_imgsrc'), (req,res)=>{
-//     const file = req.file;
-//     console.log(file);
-//     res.send({
-//         // imageUrl: "https://lamp-shopping-server-zoaseo.herokuapp.com/"+file.destination+file.filename
-
-//     })
-// })
-//ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 
 // 장르
 app.get('/genre', async (req, res)=> {
@@ -179,17 +121,6 @@ app.get('/period/:weekend', async (req, res)=> {
     }
 
 })
-// 기간별 // 7_8월
-// app.get('/period/:month', async (req, res)=> {
-//     const params = req.params;
-//     const { month } = params;
-//     connection.query(
-//         `select * from concert_table where month(concertdate) = ${month}`,
-//         (err, rows, fields)=> {
-//             res.send(err)
-//         }
-//     )
-// })
 
 app.post('/join', async (req,res)=>{
     const body = req.body;
