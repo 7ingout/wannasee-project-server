@@ -8,6 +8,10 @@ const fs = require("fs")
 const dbinfo = fs.readFileSync('./database.json');
 const conf = JSON.parse(dbinfo);
 
+// 08-19 이미지 부분 추가수정
+const multer = require("multer");
+//
+
 const connection = mysql.createConnection({
     host: conf.host,
     user: conf.user,
@@ -18,6 +22,34 @@ const connection = mysql.createConnection({
 
 app.use(express.json());
 app.use(cors());
+
+
+// 08-19 이미지 부분 추가수정
+app.use("/upload", express.static("upload"));
+// 파일 요청시 파일이 저장될 경로와 파일이름(요청된 원본파일이름) 지정
+const storage = multer.diskStorage({
+    destination:"./upload",
+    filename: function(req, file, cb) {
+        cb(null, file.originalname); // 원본 파일 이름과 똑같이 저장하겠다
+    }
+})
+// 업로드 객체
+const upload = multer({
+    storage: storage,
+    limits: { fieldSize: 1000000 }
+})
+// upload 경로로 post 요청이 왔을 경우 응답
+app.post("/upload", upload.single("c_imgsrc"), function(req, res, next){
+    res.send({
+        c_imgsrc: req.file.filename
+    })
+})
+//
+//
+//
+
+
+
 
 // 회원가입
 app.post('/join', async (req,res)=>{
